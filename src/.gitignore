@@ -1,0 +1,4 @@
+../builds/tests/*
+../builds/firmware/*
+./test_obj/*
+./obj/*
