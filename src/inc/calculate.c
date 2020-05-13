@@ -1,5 +1,6 @@
 #include "calculate.h"
 #include <stdio.h>
+#include <math.h>
 #define A_CONST  0.00112485
 #define B_CONST  0.000234822
 #define C_CONST  0.000000085
