@@ -1,4 +1,11 @@
 ### Source repository for "MCU firmware testing" article
+Branch with unity framework instead of native testing.
+
+Requirements:
+
+- AVR GNU Toolchain
+- Unity Framework in `/usr/lib/unity/`
+
 Project structure:
 
 ```
