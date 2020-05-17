@@ -39,6 +39,13 @@ TEST_CFLAGS += -Wundef
 TEST_CFLAGS += -Wold-style-definition
 TEST_CFLAGS += -DPRINT_CASES
 
+
+
+sim-tests: 
+
+
+
+
 program: $(HEX)
 
 $(HEX): $(ELF)
