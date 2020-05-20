@@ -1,53 +1,70 @@
-# 
-# 	Copyright 2008-2011 Michel Pollet <buserror@gmail.com>
-#
-#	This file is part of simavr.
-#
-#	simavr is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
-#
-#	simavr is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
-#
-#	You should have received a copy of the GNU General Public License
-#	along with simavr.  If not, see <http://www.gnu.org/licenses/>.
+SIMAVR = /home/oxide/simavr
 
-target=	charlcd
-firm_src = ${wildcard at*${board}.c}
-firmware = ${firm_src:.c=.axf}
-simavr = ../../
+BOARD = board_adcToTemp
+FIRMWARE = main_adcToTemp
 
-IPATH = .
-IPATH += ../parts
-IPATH += ${simavr}/include
-IPATH += ${simavr}/simavr/sim
+MCU = atmega8
+CLC = 8000000
+SRC_DIR = ../..
+BOARD_SRC = ../..
+FIRMWARE_SRC = $(wildcard $(SRC_DIR)/inc/*.c) main_adcToTemp.c
 
-VPATH = .
-VPATH += ../parts
+PARTS = parts
 
-LDFLAGS += -lpthread
+OBJ = obj-${shell $(CC) -dumpmachine}
 
-include ../Makefile.opengl
+BOARD_CFLAGS	= -O2 -Wall -Wextra -Wno-unused-parameter \
+		-Wno-unused-result -Wno-missing-field-initializers \
+		-Wno-sign-compare \
+		-g
+BOARD_LDFLAGS = -lpthread -lsimavr -lm -lelf
 
-all: obj atmega48_charlcd.axf ${target} 
+AVR_FLAGS = -Wall -gdwarf-2 -Os -std=gnu99 \
+			-mmcu=$(MCU) \
+			-DF_CPU=$(CLC) \
+			-fno-inline-small-functions \
+			-ffunction-sections -fdata-sections \
+			-Wl,--relax,--gc-sections \
+			-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000 
 
-atmega48_charlcd.axf: atmega48_charlcd.c
+AVR_LDFLAGS = -lm
 
-include ${simavr}/Makefile.common
 
-board = ${OBJ}/${target}.elf
+BOARD_IPATH = -I. \
+		-I$(PARTS) \
+		-I${SIMAVR}/include \
+		-I${SIMAVR}/simavr/sim 
 
-${board} : ${OBJ}/ac_input.o
-${board} : ${OBJ}/hd44780.o
-${board} : ${OBJ}/hd44780_glut.o
-${board} : ${OBJ}/${target}.o
+FIRMWARE_IPATH = -I$(SIMAVR)/simavr/sim/avr/ -I../../inc
 
-${target}: ${board}
-	@echo $@ done
+TARGET = ${OBJ}/${BOARD}.tst
 
-clean: clean-${OBJ}
-	rm -rf *.hex *.a *.axf ${target} *.vcd .*.swo .*.swp .*.swm .*.swn
+VPATH = . $(PARTS)
+
+
+sim-test: obj $(FIRMWARE).elf $(TARGET) link
+
+link: $(TARGET) $(FIRMWARE).elf
+	@rm -rf $(BOARD)
+	@ln -s $(TARGET) $(BOARD)
+
+${TARGET} : ${OBJ}/hd44780.o
+${TARGET} : ${OBJ}/${BOARD}.o
+
+
+$(FIRMWARE).elf : $(FIRMWARE_SRC)
+	avr-gcc $(FIRMWARE_IPATH) $(AVR_FLAGS) ${^} -o ${@} $(AVR_LDFLAGS)
+
+${OBJ}/%.o: %.c
+	$(CC) $(BOARD_IPATH) ${BOARD_CFLAGS} -MMD $< -c -o $@
+
+${OBJ}/%.tst:
+	$(CC) $(BOARD_IPATH) -MMD -o $@ ${filter %.o,$^} ${BOARD_LDFLAGS} 
+
+obj: ${OBJ}
+
+${OBJ}:
+	@mkdir -p ${OBJ}
+
+clean:
+	rm -rf *.elf ${TARGET} ${OBJ} $(BOARD)

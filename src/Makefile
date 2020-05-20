@@ -19,32 +19,25 @@ MCU = atmega328p
 CLK = 8000000
 AVR_CFLAGS = -Wall -Os -DF_CPU=$(CLK) -mmcu=$(MCU)
 
-TEST_CFLAGS += -g 
-TEST_CFLAGS += -Wall
-TEST_CFLAGS += -DUNITY_DOUBLE_PRECISION=0.001f
-TEST_CFLAGS += -DUNITY_INCLUDE_DOUBLE
-TEST_CFLAGS += -std=c99
-TEST_CFLAGS += -Wall
-TEST_CFLAGS += -Wextra
-TEST_CFLAGS += -Wpointer-arith
-TEST_CFLAGS += -Wcast-align
-TEST_CFLAGS += -Wwrite-strings
-TEST_CFLAGS += -Wswitch-default
-TEST_CFLAGS += -Wunreachable-code
-TEST_CFLAGS += -Winit-self
-TEST_CFLAGS += -Wmissing-field-initializers
-TEST_CFLAGS += -Wno-unknown-pragmas
-TEST_CFLAGS += -Wstrict-prototypes
-TEST_CFLAGS += -Wundef
-TEST_CFLAGS += -Wold-style-definition
-TEST_CFLAGS += -DPRINT_CASES
-
-
-
-sim-tests: 
-
-
-
+TEST_CFLAGS =  -g  \
+	-Wall \
+	-DUNITY_DOUBLE_PRECISION=0.001f \
+	-DUNITY_INCLUDE_DOUBLE \
+	-std=c99 \
+	-Wall \
+	-Wextra \
+	-Wpointer-arith \
+	-Wcast-align \
+	-Wwrite-strings \
+	-Wswitch-default \
+	-Wunreachable-code \
+	-Winit-self \
+	-Wmissing-field-initializers \
+	-Wno-unknown-pragmas \
+	-Wstrict-prototypes \
+	-Wundef \
+	-Wold-style-definition \
+	-DPRINT_CASES \
 
 program: $(HEX)
 
@@ -60,6 +53,7 @@ tests: $(TD)/$(PRJ)
 
 $(TD)/$(PRJ): $(TEST_SRC)
 	$(TEST_CC) $(TEST_CFLAGS) $(TEST_INC) $(TEST_SRC) -o $(TD)/$(PRJ) -lm
+
 
 clean:
 	rm -rf $(FD)/*.elf $(FD)/*.hex $(TD)/*
