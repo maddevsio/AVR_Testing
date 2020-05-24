@@ -23,7 +23,7 @@ double deviationTest[CASE_SIZE];
 bool testPassed = true;
 
 
-uint16_t adcToVoltages(uint16_t adc){
+uint16_t adcToVoltages(uint16_t adc){ 
 	double millivolts = adc * ADC_CONST;
 	return round(millivolts);
 }
@@ -103,10 +103,10 @@ int main(int argc,	char *argv[])
 
 	if (run_test())
 	{
-		printf("TEST PASSED.");
+		printf("TEST PASSED.\n");
 	}
 	else{
-		printf("TEST FAILED.");
+		printf("TEST FAILED.\n");
 	}
 	
 	
