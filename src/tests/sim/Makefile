@@ -1,23 +1,24 @@
 SIMAVR = /home/oxide/simavr
+BOARD = adcToLcd
+FIRMWARE = main_wrapper
+BOARD_EXECUTABLE_PATH = ../../../builds/firmware
 
-BOARD = board_adcToTemp
-FIRMWARE = main_adcToTemp
-
-MCU = atmega8
+AVR-GCC = avr-gcc
+MCU = atmega1284
 CLC = 8000000
 SRC_DIR = ../..
-BOARD_SRC = ../..
-FIRMWARE_SRC = $(wildcard $(SRC_DIR)/inc/*.c) main_adcToTemp.c
 
+FIRMWARE_SRC = $(wildcard $(SRC_DIR)/inc/*.c) $(FIRMWARE).c
 PARTS = parts
 
 OBJ = obj-${shell $(CC) -dumpmachine}
 
-BOARD_CFLAGS	= -O2 -Wall -Wextra -Wno-unused-parameter \
+BOARD_CFLAGS	= -MMD -O2 -Wall -Wextra -Wno-unused-parameter \
 		-Wno-unused-result -Wno-missing-field-initializers \
-		-Wno-sign-compare \
-		-g
-BOARD_LDFLAGS = -lpthread -lsimavr -lm -lelf
+		-Wno-sign-compare -g -fPIC \
+		-Wl,-rpath,-$(SIMAVR)/simavr/obj-x86_64-linux-gnu
+
+BOARD_LDFLAGS = -lpthread -L$(SIMAVR)/simavr/obj-x86_64-linux-gnu -lsimavr -lm -lelf
 
 AVR_FLAGS = -Wall -gdwarf-2 -Os -std=gnu99 \
 			-mmcu=$(MCU) \
@@ -25,17 +26,18 @@ AVR_FLAGS = -Wall -gdwarf-2 -Os -std=gnu99 \
 			-fno-inline-small-functions \
 			-ffunction-sections -fdata-sections \
 			-Wl,--relax,--gc-sections \
-			-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000 
+			-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000 \
+			
 
-AVR_LDFLAGS = -lm
-
+AVR_LDFLAGS = -lm 
 
 BOARD_IPATH = -I. \
+		-I.. \
 		-I$(PARTS) \
 		-I${SIMAVR}/include \
 		-I${SIMAVR}/simavr/sim 
 
-FIRMWARE_IPATH = -I$(SIMAVR)/simavr/sim/avr/ -I../../inc
+FIRMWARE_IPATH = -I$(SIMAVR)/simavr/sim/avr/ -I$(SRC_DIR)/inc/ -I$(SRC_DIR)
 
 TARGET = ${OBJ}/${BOARD}.tst
 
@@ -53,13 +55,13 @@ ${TARGET} : ${OBJ}/${BOARD}.o
 
 
 $(FIRMWARE).elf : $(FIRMWARE_SRC)
-	avr-gcc $(FIRMWARE_IPATH) $(AVR_FLAGS) ${^} -o ${@} $(AVR_LDFLAGS)
+	$(AVR-GCC) $(FIRMWARE_IPATH) $(AVR_FLAGS) ${^} -o ${@} $(AVR_LDFLAGS)
 
 ${OBJ}/%.o: %.c
-	$(CC) $(BOARD_IPATH) ${BOARD_CFLAGS} -MMD $< -c -o $@
+	$(CC) $(BOARD_IPATH) ${BOARD_CFLAGS} $< -c -o $@
 
 ${OBJ}/%.tst:
-	$(CC) $(BOARD_IPATH) -MMD -o $@ ${filter %.o,$^} ${BOARD_LDFLAGS} 
+	$(CC) $(BOARD_IPATH) ${BOARD_CFLAGS} -o $@ ${filter %.o,$^} ${BOARD_LDFLAGS} 
 
 obj: ${OBJ}
 
@@ -67,4 +69,4 @@ ${OBJ}:
 	@mkdir -p ${OBJ}
 
 clean:
-	rm -rf *.elf ${TARGET} ${OBJ} $(BOARD)
+	rm -rf *.elf ${TARGET} $(BOARD) $(OBJ)/*.o

@@ -114,7 +114,7 @@ hd44780_init(
 		struct hd44780_t * b,
 		int width,
 		int height );
-void
+double
 hd44780_print(
 		struct hd44780_t *b);
 

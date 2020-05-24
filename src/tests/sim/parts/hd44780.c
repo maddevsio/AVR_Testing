@@ -27,20 +27,15 @@
 
 #include "hd44780.h"
 
-void
+double
 hd44780_print(
 		hd44780_t *b)
 {
-	printf("/******************\\\n");
-	const uint8_t offset[] = { 0, 0x40, 0x20, 0x60 };
-	for (int i = 0; i < b->h; i++) {
-		printf("| ");
-		fwrite(b->vram + offset[i], 1, b->w, stdout);
-		printf(" |\n");
-	}
-	printf("\\******************/\n");
+	double buffer;
+	sscanf(b->vram,"%lf",&buffer);
+	printf("\n");
+	return buffer;
 }
-
 
 static void
 _hd44780_reset_cursor(
@@ -107,7 +102,7 @@ hd44780_write_data(
 {
 	uint32_t delay = 37; // uS
 	b->vram[b->cursor] = b->datapins;
-	printf("hd44780_write_data %02x\n", b->datapins);
+	//printf("hd44780_write_data %02x\n", b->datapins);
 	if (hd44780_get_flag(b, HD44780_FLAG_S_C)) {	// display shift ?
 		// TODO display shift
 	} else {
@@ -130,7 +125,7 @@ hd44780_write_command(
 		if (b->datapins & (1 << top))
 			break;
 		else top--;
-	printf("hd44780_write_command %02x\n", b->datapins);
+	//printf("hd44780_write_command %02x\n", b->datapins);
 
 	switch (top) {
 		// Set	DDRAM address

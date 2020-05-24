@@ -1,7 +1,7 @@
 #include "calculate.h"
 #include <stdio.h>
 #include <math.h>
-#define A_CONST  0.00112485
+#define A_CONST  0.00112485 //Константы используемого датчика
 #define B_CONST  0.000234822
 #define C_CONST  0.000000085
 #define KELVIN  273.15
@@ -11,7 +11,7 @@ double logRes;
 double tempKelvin;
 double tempCel;
 
-double adcToTemp(uint16_t adcVal){
+double adcToTemp(uint16_t adcVal){ //Функция преобразвания значений АЦП в температуру
 
 	resistance=((10230000/adcVal) - 10000);
 	logRes = log(resistance);

@@ -1,23 +1,22 @@
-
-#include "inc/calculate.h" 
+#include "lcd.h"
+#include "adc.h"
+#include "calculate.h"
 #include <stdio.h>
-#include "inc/adc.h"
-#include "inc/lcd.h"
+#include <stdint.h>
+#include <stdlib.h>
 
-#define ADC_PIN 1
-uint16_t adcValue;
-float temperature;
+double tempetarure = 0;
+char buffer[10] = {0};
+uint16_t adc = 0;
 
-
-int main(void)
+int main()
 {
-    adcInit();
-    lcdInit();
-    for(;;){
-        char temp[10] = {0};
-        adcValue = adcRead(ADC_PIN);
-        temperature = adcToTemp(adcValue);   
-        sprintf(temp, "%f", temperature); 
-        lcdPrintLn(temp);
-    }
+	adcInit();
+	lcd_init();
+	while (1) {
+		adc = adcRead(0);
+		tempetarure = adcToTemp(adc);
+		dtostrf(tempetarure,6,2,buffer);
+		lcd_print(buffer, 0 ,0 );
+	}
 }

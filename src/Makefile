@@ -10,10 +10,10 @@ SIZE    = avr-size --format=avr --mcu=$(MCU)
 SRC = main.c $(wildcard inc/*.c)
 INC = -Iinc
 
-UNITY_ROOT=/usr/lib/unity
+UNITY_ROOT=/home/oxide/Unity
 TEST_CC = gcc
-TEST_INC = -I$(UNITY_ROOT)/src -Iinc
-TEST_SRC = $(UNITY_ROOT)/src/unity.c tests/test_runners/*_runner.c tests/*.c ./inc/calculate.c 
+TEST_INC = -I$(UNITY_ROOT)/src -Iinc -Itests
+TEST_SRC = $(UNITY_ROOT)/src/unity.c tests/test_runners/*_runner.c tests/*.c ./inc/calculate.c
 
 MCU = atmega328p
 CLK = 8000000
@@ -59,5 +59,5 @@ clean:
 	rm -rf $(FD)/*.elf $(FD)/*.hex $(TD)/*
 
 tests/test_runners/%_runner.c: tests/%.c
-	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb tests/%.c  tests/test_runners/%_runner.c
+	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb $@ $<
 
