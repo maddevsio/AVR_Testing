@@ -63,7 +63,7 @@ sim-test:
 	make -C $(SIM_TEST_DIR)
 
 clean:
-	rm -rf $(FD)/*.elf $(FD)/*.hex $(TD)/*
+	rm -f $(FD)/*.elf $(FD)/*.hex $(TD)/*
 
 tests/test_runners/test_calculation_runner.c: tests/test_calculation.c
 	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb $< $@

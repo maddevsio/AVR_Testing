@@ -69,4 +69,4 @@ ${OBJ}:
 	@mkdir -p ${OBJ}
 
 clean:
-	rm -rf *.elf ${TARGET} $(BOARD) $(OBJ)/*.o
+	rm -f *.elf ${TARGET} $(BOARD) $(OBJ)/*.o $(OBJ)/*.d
