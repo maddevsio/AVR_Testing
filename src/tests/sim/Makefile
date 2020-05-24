@@ -13,7 +13,7 @@ PARTS = parts
 
 OBJ = obj-${shell $(CC) -dumpmachine}
 
-BOARD_CFLAGS	= -MMD -O2 -Wall -Wextra -Wno-unused-parameter \
+BOARD_CFLAGS	=  -std=c99 -MMD -O2 -Wall -Wextra -Wno-unused-parameter \
 		-Wno-unused-result -Wno-missing-field-initializers \
 		-Wno-sign-compare -g -fPIC \
 		-Wl,-rpath,-$(SIMAVR)/simavr/obj-x86_64-linux-gnu
@@ -32,10 +32,10 @@ AVR_FLAGS = -Wall -gdwarf-2 -Os -std=gnu99 \
 AVR_LDFLAGS = -lm 
 
 BOARD_IPATH = -I. \
-		-I.. \
-		-I$(PARTS) \
-		-I${SIMAVR}/include \
-		-I${SIMAVR}/simavr/sim 
+			-I.. \
+			-I$(PARTS) \
+			-I${SIMAVR}/include \
+			-I${SIMAVR}/simavr/sim \
 
 FIRMWARE_IPATH = -I$(SIMAVR)/simavr/sim/avr/ -I$(SRC_DIR)/inc/ -I$(SRC_DIR)
 

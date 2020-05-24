@@ -69,7 +69,7 @@ static void run_test(UnityTestFunction func, const char* name, int line_num)
 int main(void)
 {
   UnityBegin("tests/test_calculation.c");
-  run_test(test_adcToTemp, "test_adcToTemp", 59);
+  run_test(test_adcToTemp, "test_adcToTemp", 14);
 
   return UnityEnd();
 }

@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "sim_time.h"
-
 #include "hd44780.h"
 
 double
@@ -33,7 +32,7 @@ hd44780_print(
 {
 	double buffer;
 	sscanf(b->vram,"%lf",&buffer);
-	printf("\n");
+	printf("LCD: %s\n",b->vram);
 	return buffer;
 }
 

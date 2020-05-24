@@ -3,8 +3,7 @@ struct CalcTestCase
 {
     uint16_t adcVal[100];
     double temperature[100];
-};
-struct CalcTestCase calcCase = {
+} calcCase = {
 .adcVal=  
  {
 10, 20, 30, 40, 50, 60, 70, 80, 90, 100

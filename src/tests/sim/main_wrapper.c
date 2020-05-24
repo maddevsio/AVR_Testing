@@ -9,6 +9,7 @@
 #define AREF 5000
 
 AVR_MCU(F_CPU, "atmega1284");
+
 AVR_MCU_VOLTAGES(VCC, AVCC, AREF);
 
 #include "../../main.c"
