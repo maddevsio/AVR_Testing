@@ -61,11 +61,14 @@ void RUN_TESTS(void){
 
 void test_AdcCalc(void){
     uint8_t adc_caseSize = sizeof(calcCase.adcVal)/sizeof(calcCase.adcVal[0]);
+    printf("Actual value:Calculated value:Deviation\n");
+
     for (int i = 0; i<adc_caseSize-1;i++){
             double calcResult = adcToTemp(calcCase.adcVal[i]);
-            
             assert(test_DivEqual(calcResult, temperatureDeviation, calcCase.temperature[i]));       
+            printf("%f:%f:%f\n",calcCase.temperature[i],calcResult,calcCase.temperature[i]-calcResult);  
     }
+     printf("CALCULATION TEST PASSED.\n");
 
 }
 
