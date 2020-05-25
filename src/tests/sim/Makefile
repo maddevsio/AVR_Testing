@@ -1,8 +1,6 @@
 SIMAVR = /home/oxide/simavr
 BOARD = adcToLcd
 FIRMWARE = main_wrapper
-BOARD_EXECUTABLE_PATH = ../../../builds/firmware
-
 AVR-GCC = avr-gcc
 MCU = atmega1284
 CLC = 8000000
@@ -69,4 +67,4 @@ ${OBJ}:
 	@mkdir -p ${OBJ}
 
 clean:
-	rm -f *.elf ${TARGET} $(BOARD) $(OBJ)/*.o $(OBJ)/*.d
+	rm -rf *.elf ${TARGET} $(BOARD) $(OBJ)

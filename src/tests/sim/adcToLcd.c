@@ -93,15 +93,15 @@ bool run_test(void){
 
 int main(int argc,	char *argv[])
 {
-	firmwareInit(firmware,argv[0]);
-	hd44780_init(avr, &hd44780, 16, 2);
-	setConnections();
-	avr_cycle_timer_register_usec(avr, lcdTimer, lcdDataGathering, NULL);
-	while (!simulationCompleted){
+	firmwareInit(firmware,argv[0]); //Инициализация прошивки и микроконтроллера
+	hd44780_init(avr, &hd44780, 16, 2); //Инициализация дисплея
+	setConnections();// Подключение дисплея к микроконтроллеру
+	avr_cycle_timer_register_usec(avr, lcdTimer, lcdDataGathering, NULL); //Регистрация таймера на выполениеие коллбека lcdDataGatherin через lcdTime мкс
+	while (!simulationCompleted){ //Ждем завершения симуляции
 		avr_run(avr);
 	}
 
-	if (run_test())
+	if (run_test()) //Выполенение тестов по результатам симуляции
 	{
 		printf("TEST PASSED.\n");
 	}
